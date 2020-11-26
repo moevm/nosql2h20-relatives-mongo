@@ -1,7 +1,15 @@
 version: '3.3'
 services:
     mongo:
+        network_mode: "host"
         image: mongo:latest
         restart: always
         ports:
             - "27027:27017"
+        container_name: relatives_tree_mongo
+    frontend:
+        network_mode: "host"
+        build:
+          context: ./frontend
+        container_name: relatives_tree_frontend
+
