@@ -12,4 +12,5 @@ services:
         build:
           context: ./frontend
         container_name: relatives_tree_frontend
-
+        ports: 
+            - "7000:5000"
