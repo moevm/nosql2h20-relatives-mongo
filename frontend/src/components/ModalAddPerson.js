@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Modal, Button, Container, Row, Col,Form} from "react-bootstrap";
+import {Modal, Button, Container, Row, Col,Form,ButtonGroup} from "react-bootstrap";
 import axios from 'axios'
 
 export default function ModalAddPerson() {
@@ -14,6 +14,7 @@ export default function ModalAddPerson() {
       const [dyear, setDY] = useState(0);
       const [mid, setMid] = useState(null);
       const [fid, setFid] = useState(null);
+      const [gender, setGen] = useState(null);
 
       const content = {
           name: name,
@@ -21,6 +22,7 @@ export default function ModalAddPerson() {
           dyear: dyear,
           mid: mid,
           fid: fid,
+          gender: gender
       }
 
       const sendAddPerson = () => {
@@ -47,6 +49,13 @@ export default function ModalAddPerson() {
                 <Form.Label>First&Last Name</Form.Label>
                 <Form.Control placeholder="Enter name" onChange={(e) => setName(e.target.value)} />
               </Form.Group>
+              <Form.Group controlId="Parents" >
+                <Form.Label>Choose gender &nbsp;</Form.Label>
+                <Form.Control as="select" onChange={(e) => setGen(e.target.value)} custom>
+                  <option>M</option>
+                  <option>F</option>
+                  </Form.Control>
+                </Form.Group>
                 <Form.Group controlId="BY">
                   <Form.Label>Birth year</Form.Label>
                 </Form.Group>
