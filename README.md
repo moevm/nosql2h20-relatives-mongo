@@ -26,6 +26,8 @@
  
 ## Deploy
 
+Frontend docker PORT: 5000
+
 Launch from main directory
 ```
 docker-compose up

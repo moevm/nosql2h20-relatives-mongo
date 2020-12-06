@@ -1,26 +1,34 @@
 import React from "react";
-import {Nav, Navbar} from "react-bootstrap";
+import {Nav, Navbar, Modal, Col} from "react-bootstrap";
 import {Link} from "react-router-dom";
+import ModalAddDynasty from "./ModalAddDynasty.js";
+import ModalAddPerson from "./ModalAddPerson.js";
+import ModalImport from "./ModalImport.js";
+import ModalExport from "./ModalExport.js";
+import ModalGetPerson from "./ModalGetPerson.js";
+import ModalGetDynasty from "./ModalGetDynasty.js";
+import ModalCrosses from "./ModalCrosses.js";
+
 
 export default function MainNavbar() {
     return (
       <>
-        <Navbar bg="dark" variant="dark">
+        <Navbar bg="dark" variant="dark" expand="lg">
             <Navbar.Brand as={Link} to="/">
                 <i>Relatives</i>
             </Navbar.Brand>
             <Nav defaultActiveKey="/">
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/">Home</Nav.Link>
+                    <ModalAddDynasty>Add Dynasty</ModalAddDynasty> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/stat">Stat</Nav.Link>
+                    <ModalAddPerson>Add Person</ModalAddPerson> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/traffic">Traffic</Nav.Link>
+                    <ModalImport text="Import"></ModalImport> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/data">Data</Nav.Link>
+                    <ModalExport text="Export"></ModalExport> &nbsp;
                 </Nav.Item>
             </Nav>
         </Navbar>
@@ -31,19 +39,19 @@ export default function MainNavbar() {
                     <Nav.Link as={Link} to="/" className="text-white">Full Tree</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/stat" className="text-white">Parents</Nav.Link>
+                    <ModalGetPerson text="Parents">Add Person</ModalGetPerson> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/traffic" className="text-white">Childs</Nav.Link>
+                    <ModalGetPerson text="Childs">Add Person</ModalGetPerson> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
                     <Nav.Link as={Link} to="/data" className="text-white">Sort Childs</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/data" className="text-white">Show Dynasty</Nav.Link>
+                    <ModalGetDynasty text="Childs">Add Person</ModalGetDynasty> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/data" className="text-white">Find Crosses</Nav.Link>
+                    <ModalCrosses text="Childs">Add Person</ModalCrosses> &nbsp;
                 </Nav.Item>
             </Nav>
         </Navbar>
