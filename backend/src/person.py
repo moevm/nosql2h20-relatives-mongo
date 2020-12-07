@@ -3,14 +3,17 @@ from typing import List
 
 class Person:
 
-    def __init__(self, name: str, dateOfBirth: str, dateOfDeath: str, gender: str, dynasty: str, parents: List[object], children: List[object]):
+    def __init__(self, name: str, byear: str, dyear: str, gender: str, mother: str, father: str, dynasty=None):
         self.name = name
-        self.dateOfBirth = dateOfBirth
-        self.dateOfDeath = dateOfDeath
+        self.byear = byear
+        self.dyear = dyear
         self.gender = gender
         self.dynasty = dynasty
-        self.parents = parents if parents is not None else []
-        self.children = children if children is not None else []
+        self.parents = [mother,
+                        father]  # добавить поиск по бд и определение династии, хранить список детей было бы удобно
+
+    def add_dynasty(self, dynasty: str):
+        self.dynasty = dynasty
 
     def get_parents_tree(self):
         res = '['
@@ -18,7 +21,7 @@ class Person:
             res += '['
             for i, val in enumerate(self.parents):
                 res += val.name
-                res += ',' if i!=self.parents.__len__() else ''
+                res += ',' if i != self.parents.__len__() else ''
                 res += val.get_parents_tree()
             res += ']'
         res += ']'
@@ -30,19 +33,18 @@ class Person:
             res += '['
             for i, val in enumerate(self.children):
                 res += val.name
-                res += ',' if i!=self.children.__len__() else ''
+                res += ',' if i != self.children.__len__() else ''
                 res += val.get_children_tree()
             res += ']'
         res += ']'
         return res
 
     def __str__(self):
-        return f'Person({self.name} {self.dateOfBirth} {self.dateOfDeath} {self.gender} {self.dynasty})'
+        return f'Person({self.name} {self.byear} {self.dyear} {self.gender} {self.dynasty})'
 
     def __eq__(self, other: 'Person'):
-        return self.name == other.name and self.dateOfBirth == other.dateOfBirth
-    
+        return self.name == other.name and self.byear == other.byear
+
     @staticmethod
     def create_from_dict(obj) -> 'Person':
-        return Person(obj['name'], obj['dateOfBirth'], obj['dateOfDeath'], obj['gender'], obj['dynasty'],
-                      obj['parents'], obj['children'])
+        return Person(obj['name'], obj['byear'], obj['dyear'], obj['gender'], obj['mid'], obj['fid'], obj['dynasty'])

@@ -1,93 +1,164 @@
 from pymongo import DESCENDING as DESCENDING
 from pymongo import MongoClient
+import unittest
 from pymongo.database import Database as MongoDatabase
 from pymongo.collection import Collection as MongoCollection
 from backend.src.person import Person
 from backend.src.dynasty import Dynasty
 
+# gender constants
+M = 'M'
+F = 'F'
+
+
 class MongoDB:
 
-    def __init__(self, host='localhost', port=27027):
+    def __init__(self, host='localhost', port=27017):
         self.client = MongoClient(host, port)
         self.db = self.client['dynasty-db']
+        self.persons = self.db.persons
+        self.dynasties = self.db.dynasties
+        self.clear_db()
+        self.persons_id = self._generate_ids(self.persons)  # исправить говнокод со статикметодами
+        self.dynasties_id = self._generate_ids(self.dynasties)
+
+    @staticmethod
+    def _generate_ids(collection):
+        id_: int = MongoDB.get_max_id(collection)
+        while True:
+            id_ += 1
+            yield str(id_)
+
+    def _next_id(self, collection):
+        if collection.name == 'persons':
+            return next(self.persons_id)
+        if collection.name == 'dynasties':
+            return next(self.dynasties_id)
 
     def get_tree(self, id_):
-        self.client: MongoDatabase
         try:
-            res = self.client.find({"_id": id_}).next()
-            tree = Person.create_from_dict({key: res[key] for key in res if key != '_id'}).get_parents_tree() + '['
-            + Person.create_from_dict({key: res[key] for key in res if key != '_id'}).name + ']' + Person.create_from_dict({key: res[key] for key in res if key != '_id'}).get_children_tree()
+            res = self.persons.find({"_id": id_}).next()
+            person = Person.create_from_dict({key: res[key] for key in res if key != '_id'})
+            tree = person.get_parents_tree() + '[' + person.name + ']' + person.get_children_tree()
             return tree
         except:
-            return  None
+            return None
 
-    def add_person(self, id_: str, person: Person):
-        self.client: MongoCollection
+    def update_person(self, id_, person: Person):
+        self.persons.update(self.persons.find({"_id": id_}).next(),
+                            {"$set": {"dynasty": person.dynasty}})
+
+    def add_person(self, person: Person):
+        id_ = self._next_id(self.persons)
+        mother = self.get_person(person.parents.__getitem__(0))
+        father = self.get_person(person.parents.__getitem__(1))
+        if mother is not None and father is not None:
+            mother_dynasty = self.get_dynasty({"_id": mother.dynasty})
+            father_dynasty = self.get_dynasty({"_id": father.dynasty})
+            if mother_dynasty is None:
+                person.add_dynasty(self.get_dynasty({"_id": father.dynasty}))
+            elif father_dynasty is None:
+                person.add_dynasty(self.get_dynasty({"_id": mother.dynasty}))
+            else:
+                if self.get_person(mother_dynasty.founder).gender == 'F' and self.get_person(father_dynasty.founder).gender == 'M':
+                    person.add_dynasty(father_dynasty)
+                elif self.get_person(mother_dynasty.founder).gender == 'F':
+                    person.add_dynasty(mother_dynasty)
+                elif self.get_person(father_dynasty.founder).gender == 'F':
+                    person.add_dynasty(father_dynasty)
+                else:
+                    person.add_dynasty(father_dynasty)
         try:
-            self.client.insert_one({"_id": id_,
-                                    "name": person.name,
-                                    "dateOfBirth": person.dateOfBirth,
-                                    "dateOfDeath": person.dateOfDeath,
-                                    "gender": person.gender,
-                                    "dynasty": person.dynasty})
-        except:
-            self.client.replace_one(self.client.find({"_id": id_}).next(),
-                                    {"_id": id_,
+            self.persons.insert_one({"_id": id_,
                                      "name": person.name,
-                                    "dateOfBirth": person.dateOfBirth,
-                                    "dateOfDeath": person.dateOfDeath,
-                                    "gender": person.gender,
-                                    "dynasty": person.dynasty})
+                                     "byear": person.byear,
+                                     "dyear": person.dyear,
+                                     "gender": person.gender,
+                                     "dynasty": person.dynasty,
+                                     "mid": person.parents.__getitem__(0),
+                                     "fid": person.parents.__getitem__(1)})
+            return id_
+        except:
+            self.persons.replace_one(self.persons.find({"_id": id_}).next(),
+                                     {"_id": id_,
+                                      "name": person.name,
+                                      "byear": person.byear,
+                                      "dyear": person.dyear,
+                                      "gender": person.gender,
+                                      "dynasty": person.dynasty,
+                                      "mid": person.parents.__getitem__(0),
+                                      "fid": person.parents.__getitem__(1)
+                                      })
+            return id_
 
     def get_person(self, id_):
-        self.client: MongoDatabase
         try:
-            res = self.client.find({"_id": id_}).next()
+            res = self.persons.find({"_id": id_}).next()
             return Person.create_from_dict({key: res[key] for key in res if key != '_id'})
         except:
             return None
 
-    def add_dynasty(self, id_: str, dynasty: Dynasty):
-        self.client: MongoCollection
+    def add_dynasty(self, dynasty: Dynasty, founder_id: str):
+        id_ = self._next_id(self.dynasties)
         try:
-            self.client.insert_one({"_id": id_,
-                                    "name": dynasty.name,
-                                    "founder": dynasty.founder})
+            self.dynasties.insert_one({"_id": id_,
+                                       "name": dynasty.name,
+                                       "founder": founder_id})
+
+            return id_
         except:
-            self.client.replace_one(self.client.find({"_id": id_}).next(),
-                                    {"_id": id_,
-                                     "name": dynasty.name,
-                                    "founder": dynasty.founder})
+            self.dynasties.replace_one(self.dynasties.find({"_id": id_}).next(),
+                                       {"_id": id_,
+                                        "name": dynasty.name,
+                                        "founder": founder_id})
+            return id_
 
     def get_dynasty(self, id_):
-        self.client: MongoDatabase
         try:
-            res = self.client.find({"_id": id_}).next()
+            res = self.dynasties.find({"_id": id_}).next()
             return Dynasty.create_from_dict({key: res[key] for key in res if key != '_id'})
         except:
             return None
 
     def clear_db(self):
-        return self.client.drop()
+        self.persons.drop()
+        self.dynasties.drop()
 
-    def get_all_documents(self):
-        return self.client.find()
+    @staticmethod
+    def get_all_documents(collection):
+        return collection.find()
 
-    def get_all_keys(self):
-        only_ids_cursor = self.client.find( {}, {'_id' : 1 } )
+    @staticmethod
+    def get_all_keys(collection):
+        only_ids_cursor = collection.find({}, {'_id': 1})
         list = []
         for elem in only_ids_cursor:
             list.append(elem['_id'])
         return list
 
-    def remove_object(self, _id):
-        self.client.delete_one({ '_id' : _id })
+    @staticmethod
+    def remove_object(collection, _id):
+        collection.delete_one({'_id': _id})
 
-    def get_max_id(self) -> int:
+    @staticmethod
+    def get_max_id(collection) -> int:
         try:
-            return int(self.get_all_documents().sort([('_id', DESCENDING)])[0]['_id'])
+            return int(MongoDB.get_all_documents(collection).sort([('_id', DESCENDING)])[0]['_id'])
         except:
             return -1
 
-    def is_empty(self) -> bool:
-        return False if self.get_all_documents().count() > 0 else True
+    @staticmethod
+    def is_empty(collection) -> bool:
+        return False if MongoDB.get_all_documents(collection).count() > 0 else True
+
+    def get_size(self):
+        self.db.__sizeof__()
+
+
+class MongoTest(unittest.TestCase):
+    def test_add_and_get(self):
+        mongoDB = MongoDB()
+        person = Person('John Snow', '2.2.2', '2.2.2', 'male', 2, 3)
+        mongoDB.add_person(person)
+        self.assertIsInstance(mongoDB.get_person('0'), Person)
+        mongoDB.clear_db()

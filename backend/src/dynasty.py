@@ -1,5 +1,6 @@
 from backend.src.person import Person
 
+
 class Dynasty:
 
     def __init__(self, name: str, founder: Person):
