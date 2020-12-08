@@ -36,16 +36,13 @@ export default function MainNavbar() {
         <Navbar bg="secondary" >
             <Nav defaultActiveKey="/" className="text-white">
                 <Nav.Item>
-                    <Nav.Link as={Link} to="/" className="text-white">Full Tree</Nav.Link>
+                    <Nav.Link as={Link} to="/api/fulltree" className="text-white">Full Tree</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <ModalGetPerson text="Parents">Add Person</ModalGetPerson> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
                     <ModalGetPerson text="Childs">Add Person</ModalGetPerson> &nbsp;
-                </Nav.Item>
-                <Nav.Item>
-                    <Nav.Link as={Link} to="/data" className="text-white">Sort Childs</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
                     <ModalGetDynasty text="Childs">Add Person</ModalGetDynasty> &nbsp;
