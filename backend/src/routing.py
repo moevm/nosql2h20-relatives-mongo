@@ -2,7 +2,7 @@ from bottle import run, get, post, request, response
 from backend.src.network import host, port
 from backend.src.person import Person
 from backend.src.dynasty import Dynasty
-from backend.src.mongo import MongoDB
+from backend.src.database import MongoDB
 
 
 @post('/add_person')
@@ -67,6 +67,22 @@ def add_dynasty():
         result['success'] = False
 
     print(result)
+
+
+# @post('show_dynasty')
+# def show_dynasty():
+#     response.content_type = 'application/json'
+#
+#     print('POST', request.json)
+#     result = dict()
+#
+#     try:
+#
+#
+#     except:
+#         result['success'] = False
+#
+#     print(result)
 
 
 def run_server():

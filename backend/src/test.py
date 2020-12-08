@@ -1,5 +1,5 @@
 from unittest import TestLoader, TextTestRunner, TestSuite
-from backend.src.mongo import MongoTest
+from backend.src.database import MongoTest
 
 
 def test_all():
