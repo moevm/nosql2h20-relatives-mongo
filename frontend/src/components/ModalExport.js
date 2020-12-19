@@ -8,6 +8,10 @@ export default function ModalExport() {
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
 
+
+        axios.get("/api/fulltree")
+        .then(response => console.log("response", response.data))
+
         return (
           <>
             <Button variant="light" onClick={handleShow}>
