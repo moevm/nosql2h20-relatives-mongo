@@ -3,6 +3,7 @@ from backend.src.network import host, port
 from backend.src.person import Person
 from backend.src.dynasty import Dynasty
 from backend.src.database import MongoDB
+import json
 
 
 @post('/add_person')
@@ -69,20 +70,47 @@ def add_dynasty():
     print(result)
 
 
-# @post('show_dynasty')
-# def show_dynasty():
-#     response.content_type = 'application/json'
-#
-#     print('POST', request.json)
-#     result = dict()
-#
-#     try:
-#
-#
-#     except:
-#         result['success'] = False
-#
-#     print(result)
+@get('/persons_list')
+def persons_list():
+    response.content_type = 'application/json'
+
+    print('GET')
+    result = dict()
+
+    try:
+        result['success'] = True
+        result['res'] = []
+        all_docs = db.persons.collection.find()
+        for i in all_docs:
+            try:
+                person = all_docs.next()
+                result['res'].append({key: person[key] for key in person if key == 'name'})
+            except StopIteration:
+                break
+    except:
+        result['success'] = False
+    print(result)
+
+@get('/dynasty_list')
+def dynasty_list():
+    response.content_type = 'application/json'
+
+    print('GET')
+    result = dict()
+
+    try:
+        result['success'] = True
+        result['res'] = []
+        all_docs = db.dynasties.collection.find()
+        for i in all_docs:
+            try:
+                dynasty = all_docs.next()
+                result['res'].append({key: dynasty[key] for key in dynasty if key == 'name'})
+            except StopIteration:
+                break
+    except:
+        result['success'] = False
+    print(result)
 
 
 def run_server():

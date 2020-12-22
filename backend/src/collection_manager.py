@@ -17,17 +17,17 @@ class CollectionManager:
             yield str(id_)
 
     def get_all_documents(self):
-        return self.find()
+        return self.collection.find()
 
     def get_all_keys(self):
-        only_ids_cursor = self.find({}, {'_id': 1})
+        only_ids_cursor = self.collection.find({}, {'_id': 1})
         list = []
         for elem in only_ids_cursor:
             list.append(elem['_id'])
         return list
 
     def remove_object(self, _id):
-        self.delete_one({'_id': _id})
+        self.collection.delete_one({'_id': _id})
 
     def get_max_id(self) -> int:
         try:
