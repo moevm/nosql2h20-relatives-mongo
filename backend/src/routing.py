@@ -3,7 +3,6 @@ from backend.src.network import host, port
 from backend.src.person import Person
 from backend.src.dynasty import Dynasty
 from backend.src.database import MongoDB
-import json
 
 
 @post('/add_person')
@@ -33,7 +32,7 @@ def add_person():
         result['success'] = False
 
     print(result)
-    print(db.db.command("dbstats"))
+    # print(db.db.command("dbstats"))
 
 
 @post('/add_dynasty')
@@ -45,11 +44,11 @@ def add_dynasty():
 
     try:
         founder = Person(request.json['name'],
-                     request.json['byear'],
-                     request.json['dyear'],
-                     request.json['gender'],
-                     None,
-                     None)
+                         request.json['byear'],
+                         request.json['dyear'],
+                         request.json['gender'],
+                         None,
+                         None)
         dynasty = Dynasty(request.json['dyn'], founder)
         founder_key = db.add_person(founder)
         dynasty_key = db.add_dynasty(dynasty, founder_key)
@@ -65,7 +64,7 @@ def add_dynasty():
         result['gender'] = request.json['gender']
 
     except:
-        result['success'] = False
+       result['success'] = False
 
     print(result)
 
@@ -91,12 +90,14 @@ def persons_list():
         result['success'] = False
     print(result)
 
+
 @get('/dynasty_list')
 def dynasty_list():
     response.content_type = 'application/json'
 
     print('GET')
     result = dict()
+    fulltree()
 
     try:
         result['success'] = True
@@ -113,10 +114,33 @@ def dynasty_list():
     print(result)
 
 
+@get('/fulltree')
+def fulltree():
+    response.content_type = 'application/json'
+
+    print('GET')
+    result = dict()
+    try:
+        result['success'] = True
+        result['res'] = []
+        all_docs = db.dynasties.collection.find()
+        for i, dynasty in enumerate(all_docs):
+            try:
+                founder = db.get_person(dynasty['founder'])
+                result['res'].append(founder.name)
+                result['res'].append(db.get_dynasty_tree(founder))
+            except StopIteration:
+                break
+    except:
+        result['success'] = False
+    print(result)
+
+
 def run_server():
     global db
     db = MongoDB()
     run(host=host, port=port)
+    db.clear_db()
 
 
 run_server()
