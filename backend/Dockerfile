@@ -11,5 +11,5 @@ ADD src/routing.py ./backend/src
 RUN pip3 install pymongo
 RUN pip3 install bottle
 
-CMD python3 .backend/src/routing.py
+CMD python3 /backend/src/routing.py
 
