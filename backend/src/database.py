@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 import unittest
-from backend.src.person import Person
-from backend.src.dynasty import Dynasty
-from backend.src.collection_manager import CollectionManager
+from person import Person
+from dynasty import Dynasty
+from collection_manager import CollectionManager
 
 # gender constants
 M = 'M'
