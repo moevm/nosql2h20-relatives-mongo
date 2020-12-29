@@ -1,8 +1,8 @@
 from bottle import run, get, post, request, response
-from backend.src.network import host, port
-from backend.src.person import Person
-from backend.src.dynasty import Dynasty
-from backend.src.database import MongoDB
+from network import host, port
+from person import Person
+from dynasty import Dynasty
+from database import MongoDB
 
 
 @post('/add_person')

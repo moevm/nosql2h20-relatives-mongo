@@ -1,4 +1,4 @@
-from backend.src.person import Person
+from person import Person
 
 
 class Dynasty:
