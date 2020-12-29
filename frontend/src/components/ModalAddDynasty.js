@@ -14,6 +14,8 @@ export default function ModalAddDynasty() {
       const [byear, setBY] = useState(0);
       const [dyear, setDY] = useState(0);
       const [mid, setMid] = useState(null);
+      const [gender, setGen] = useState(null);
+
       const [fid, setFid] = useState(null);
 
       const content = {
@@ -23,6 +25,7 @@ export default function ModalAddDynasty() {
           dyear: dyear,
           mid: mid,
           fid: fid,
+          gender: gender
       }
 
       const sendAddDyn = () => {
@@ -53,6 +56,13 @@ export default function ModalAddDynasty() {
                   <Form.Label>First&Last Name</Form.Label>
                   <Form.Control placeholder="Enter founder name" onChange={(e) => setName(e.target.value)} />
                 </Form.Group>
+                <Form.Group controlId="Parents" >
+                  <Form.Label>Choose gender &nbsp;</Form.Label>
+                  <Form.Control as="select" onChange={(e) => setGen(e.target.value)} custom>
+                    <option>M</option>
+                    <option>F</option>
+                    </Form.Control>
+                  </Form.Group>
                   <Form.Group controlId="BY">
                     <Form.Label>Birth year</Form.Label>
                   </Form.Group>

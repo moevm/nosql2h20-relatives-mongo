@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {Modal, Button, Container, Row, Col, Form} from "react-bootstrap";
+import axios from 'axios'
 
 export default function ModalCrosses() {
 
@@ -7,6 +8,9 @@ export default function ModalCrosses() {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
+
+        axios.get("/api/dynasty_list")
+        .then(response => console.log("response", response.data))
 
         return (
           <>

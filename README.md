@@ -9,10 +9,10 @@
  
 #### October
 
-- [ ] [Use cases](https://github.com/moevm/nosql2h20-relatives-mongo/wiki/Usecases)
-- [ ] [Модель данных](https://github.com/moevm/nosql2h20-relatives-mongo/blob/master/demo/media/datamodel_model.jpg)
+- [x] [Use cases](https://github.com/moevm/nosql2h20-relatives-mongo/wiki/Usecases)
+- [x] [Модель данных](https://github.com/moevm/nosql2h20-relatives-mongo/blob/master/demo/media/datamodel_model.jpg)
 
-- [ ] Доп. задание
+- [x] Доп. задание
  
 #### November
 

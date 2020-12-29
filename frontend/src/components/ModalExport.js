@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {Modal, Button, Container, Row, Col, Form} from "react-bootstrap";
+import axios from 'axios'
 
 export default function ModalExport() {
 
@@ -7,6 +8,10 @@ export default function ModalExport() {
         const [show, setShow] = useState(false);
         const handleClose = () => setShow(false);
         const handleShow = () => setShow(true);
+
+
+        axios.get("/api/fulltree")
+        .then(response => console.log("response", response.data))
 
         return (
           <>
