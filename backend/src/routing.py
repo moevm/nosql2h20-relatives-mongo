@@ -3,6 +3,7 @@ from network import host, port
 from person import Person
 from dynasty import Dynasty
 from database import MongoDB
+import json
 
 
 @post('/add_person')
@@ -32,6 +33,7 @@ def add_person():
         result['success'] = False
 
     print(result)
+    return json.dumps(result)
     # print(db.db.command("dbstats"))
 
 
@@ -67,6 +69,7 @@ def add_dynasty():
        result['success'] = False
 
     print(result)
+    return json.dumps(result)
 
 
 @get('/persons_list')
@@ -89,6 +92,7 @@ def persons_list():
     except:
         result['success'] = False
     print(result)
+    return json.dumps(result)
 
 
 @get('/dynasty_list')
@@ -112,6 +116,7 @@ def dynasty_list():
     except:
         result['success'] = False
     print(result)
+    return json.dumps(result)
 
 
 @get('/fulltree')
@@ -134,6 +139,7 @@ def fulltree():
     except:
         result['success'] = False
     print(result)
+    return json.dumps(result)
 
 
 def run_server():
