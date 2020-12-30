@@ -14,3 +14,10 @@ services:
         container_name: relatives_tree_frontend
         ports: 
             - "7000:5000"
+    backend:
+        network_mode: "host"
+        build:
+            context: ./backend
+        container_name: relatives_tree_backend
+        ports:
+            - "5001:5001"
