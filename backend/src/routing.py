@@ -34,7 +34,7 @@ def add_person():
 
     print(result)
     return json.dumps(result)
-    # print(db.db.command("dbstats"))
+    #print(db.db.command("dbstats"))
 
 
 @post('/add_dynasty')
@@ -133,7 +133,8 @@ def fulltree():
             try:
                 founder = db.get_person(dynasty['founder'])
                 result['res'].append(founder.name)
-                result['res'].append(db.get_dynasty_tree(founder))
+                if founder.get_children().__len__() != 0:
+                    result['res'].append(db.get_dynasty_tree(founder))
             except StopIteration:
                 break
     except:
