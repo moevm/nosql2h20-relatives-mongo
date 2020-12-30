@@ -28,7 +28,7 @@ export default function MainNavbar() {
                     <ModalImport text="Import"></ModalImport> &nbsp;
                 </Nav.Item>
                 <Nav.Item>
-                    <ModalExport text="Export"></ModalExport> &nbsp;
+                    <Nav.Link as={Link} to="/export" className="text-white">Export</Nav.Link> &nbsp;
                 </Nav.Item>
             </Nav>
         </Navbar>
